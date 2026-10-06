@@ -1,0 +1,92 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node{
+    int veri;
+    struct Node* next;
+};
+
+struct Node* nodeOlustur(int deger){
+    struct Node* yeniNode = (struct Node*)malloc(sizeof(struct Node));
+    yeniNode -> veri = deger;
+    yeniNode -> next = NULL;
+    return yeniNode;
+}
+
+void listeYazdir(struct Node* head){
+    struct Node* temp = head;
+    while (temp != NULL){
+        printf("%d -> ", temp -> veri);
+        temp = temp -> next;
+    }
+    printf("NULL\n");
+}
+
+void ucKatinaCikar(struct Node* head){
+    struct Node* temp = head;
+    while(temp != NULL){
+        temp->veri = (temp->veri) * 3;
+        temp = temp->next;
+    }
+}
+
+void ciftleriYazdir(struct Node* head){
+    struct Node* temp = head;
+    printf("Cift Degerli Elemanlar: ");
+    while(temp != NULL){
+        if(temp -> veri % 2 == 0){
+            printf("%d ", temp -> veri);
+        }
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int enKucukBul(struct Node* head){
+    if(head == NULL) return -1;
+    
+    int min = head -> veri;
+    struct Node* temp = head -> next;
+    
+    while (temp != NULL){
+        if(temp->veri < min){
+            min = temp->veri;
+        }
+        temp = temp->next;
+    }
+    return min;
+}
+
+void listeSerbestBirak(struct Node* head){
+    struct Node* temp;
+    while(head != NULL){
+        temp = head;
+        head = head -> next;
+        free(temp);
+    }
+}
+
+int main(){
+    struct Node* head = nodeOlustur(11);
+    head -> next = nodeOlustur(5);
+    head -> next -> next = nodeOlustur(28);
+    head -> next -> next -> next = nodeOlustur(42);
+    head -> next -> next -> next -> next = nodeOlustur(17);
+    
+    printf("Listenin Ilk Hali: \n");
+    listeYazdir(head);
+    
+    ucKatinaCikar(head);
+    printf("\n3 Katina Cikarilmis Hali: \n");
+    listeYazdir(head);
+    
+    printf("\nCift Elemanlar: \n");
+    ciftleriYazdir(head);
+    
+    int minVal = enKucukBul(head);
+    printf("\nGuncellenmis Listedeki En Kucuk Deger: %d\n", minVal);
+    
+    listeSerbestBirak(head);
+    
+    return 0;
+}
