@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// İstenen struct yapısı[span_0](start_span)[span_0](end_span)
+struct Node {
+    char sarkiAdi[50]; //[span_1](start_span)[span_1](end_span)
+    char tur[30];      //[span_2](start_span)[span_2](end_span)
+    struct Node *next; //[span_3](start_span)[span_3](end_span)
+};
+
+// Yeni şarkı oluşturmak için dugumOlustur() fonksiyonu[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
+struct Node* dugumOlustur(char ad[], char tur[]) { //[span_6](start_span)[span_6](end_span)
+    struct Node* yeniDugum = (struct Node*)malloc(sizeof(struct Node));
+    
+    // strcpy kullanarak içerikleri kopyalama[span_7](start_span)[span_7](end_span)
+    strcpy(yeniDugum->sarkiAdi, ad);
+    strcpy(yeniDugum->tur, tur);
+    yeniDugum->next = NULL;
+    
+    return yeniDugum;
+}
+
+// Şarkıları listenin sonuna ekleyen sonaEkle() fonksiyonu[span_8](start_span)[span_8](end_span)
+void sonaEkle(struct Node** bas, char ad[], char tur[]) {
+    struct Node* yeniDugum = dugumOlustur(ad, tur);
+    
+    if (*bas == NULL) {
+        *bas = yeniDugum;
+        return;
+    }
+    
+    struct Node* gecici = *bas;
+    while (gecici->next != NULL) {
+        gecici = gecici->next;
+    }
+    
+    gecici->next = yeniDugum;
+}
+
+// Çalma listesindeki bütün şarkıları gösteren listeYazdir() fonksiyonu[span_9](start_span)[span_9](end_span)
+void listeYazdir(struct Node* bas) {
+    struct Node* gecici = bas;
+    
+    while (gecici != NULL) {
+        // Çıktıdaki formata uygun yazdırma[span_10](start_span)[span_10](end_span)
+        printf("Sarki: %s | Tur: %s\n", gecici->sarkiAdi, gecici->tur);
+        gecici = gecici->next;
+    }
+}
+
+// Şarkı adına göre arama yapan sarkiAra() fonksiyonu[span_11](start_span)[span_11](end_span)
+void sarkiAra(struct Node* bas, char arananSarki[]) {
+    struct Node* gecici = bas;
+    int bulundu = 0;
+    
+    while (gecici != NULL) {
+        // strcmp ile karşılaştırma[span_12](start_span)[span_12](end_span)
+        if (strcmp(gecici->sarkiAdi, arananSarki) == 0) {
+            bulundu = 1;
+            break;
+        }
+        gecici = gecici->next;
+    }
+    
+    // İstenen çıktı formatına göre sonuç yazdırma[span_13](start_span)[span_13](end_span)
+    if (bulundu == 1) {
+        printf("'%s' şarkısı bulundu!\n", arananSarki);
+    } else {
+        printf("'%s' şarkısı bulunamadı!\n", arananSarki);
+    }
+}
+
+int main() {
+    struct Node* bas = NULL;
+
+    // Başlangıç listesini oluşturma[span_14](start_span)[span_14](end_span)
+    sonaEkle(&bas, "Dudu", "Pop");
+    sonaEkle(&bas, "Dönence", "Anadolu Rock");
+    sonaEkle(&bas, "La vie en rose", "Jazz");
+
+    printf("CALMA LISTESI\n"); //[span_15](start_span)[span_15](end_span)
+    listeYazdir(bas);
+    printf("\n");
+
+    printf("ARAMA\n"); //[span_16](start_span)[span_16](end_span)
+    sarkiAra(bas, "Dönence"); //[span_17](start_span)[span_17](end_span)
+    printf("\n");
+
+    printf("ARAMA :\n"); //[span_18](start_span)[span_18](end_span)
+    sarkiAra(bas, "CENNETUM OLURDUN"); //[span_19](start_span)[span_19](end_span)
+    printf("\n");
+
+    // Bulunamayan şarkıyı listeye ekleme
+    sonaEkle(&bas, "CENNETUM OLURDUN", "Türkü"); //[span_20](start_span)[span_20](end_span)
+
+    printf("GUNCEL CALMA LISTESI\n"); //[span_21](start_span)[span_21](end_span)
+    listeYazdir(bas);
+
+    // Belleği temizleme
+    struct Node* gecici;
+    while (bas != NULL) {
+        gecici = bas;
+        bas = bas->next;
+        free(gecici);
+    }
+
+    return 0;
+}
