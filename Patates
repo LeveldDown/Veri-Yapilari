@@ -21,21 +21,26 @@ struct Node* dugumOlustur(char ad[], char tur[]) { //[span_6](start_span)[span_6
     return yeniDugum;
 }
 
-// Şarkıları listenin sonuna ekleyen sonaEkle() fonksiyonu[span_8](start_span)[span_8](end_span)
-void sonaEkle(struct Node** bas, char ad[], char tur[]) {
+// Çift yıldız olmadan, güncellenmiş liste başını döndüren sonaEkle() fonksiyonu[span_8](start_span)[span_8](end_span)
+struct Node* sonaEkle(struct Node* bas, char ad[], char tur[]) {
     struct Node* yeniDugum = dugumOlustur(ad, tur);
     
-    if (*bas == NULL) {
-        *bas = yeniDugum;
-        return;
+    // Eğer liste boşsa, yeni düğümü baş olarak döndür
+    if (bas == NULL) {
+        return yeniDugum;
     }
     
-    struct Node* gecici = *bas;
+    // Liste boş değilse, sona kadar git
+    struct Node* gecici = bas;
     while (gecici->next != NULL) {
         gecici = gecici->next;
     }
     
+    // Son düğüme yeni düğümü ekle
     gecici->next = yeniDugum;
+    
+    // Listenin başını (değişmediği için) geri döndür
+    return bas;
 }
 
 // Çalma listesindeki bütün şarkıları gösteren listeYazdir() fonksiyonu[span_9](start_span)[span_9](end_span)
@@ -74,10 +79,10 @@ void sarkiAra(struct Node* bas, char arananSarki[]) {
 int main() {
     struct Node* bas = NULL;
 
-    // Başlangıç listesini oluşturma[span_14](start_span)[span_14](end_span)
-    sonaEkle(&bas, "Dudu", "Pop");
-    sonaEkle(&bas, "Dönence", "Anadolu Rock");
-    sonaEkle(&bas, "La vie en rose", "Jazz");
+    // Başlangıç listesini oluşturma (bas değişkeni fonksiyondan dönen değerle güncellenir)[span_14](start_span)[span_14](end_span)
+    bas = sonaEkle(bas, "Dudu", "Pop");
+    bas = sonaEkle(bas, "Dönence", "Anadolu Rock");
+    bas = sonaEkle(bas, "La vie en rose", "Jazz");
 
     printf("CALMA LISTESI\n"); //[span_15](start_span)[span_15](end_span)
     listeYazdir(bas);
@@ -92,7 +97,7 @@ int main() {
     printf("\n");
 
     // Bulunamayan şarkıyı listeye ekleme
-    sonaEkle(&bas, "CENNETUM OLURDUN", "Türkü"); //[span_20](start_span)[span_20](end_span)
+    bas = sonaEkle(bas, "CENNETUM OLURDUN", "Türkü"); //[span_20](start_span)[span_20](end_span)
 
     printf("GUNCEL CALMA LISTESI\n"); //[span_21](start_span)[span_21](end_span)
     listeYazdir(bas);
