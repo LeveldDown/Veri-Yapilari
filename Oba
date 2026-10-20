@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Dugum {
+    int veri;
+    struct Dugum* sonraki;
+};
+
+struct Dugum* dugumOlustur(int veri) {
+    struct Dugum* yeniDugum = (struct Dugum*)malloc(sizeof(struct Dugum));
+    yeniDugum->veri = veri;
+    yeniDugum->sonraki = NULL;
+    return yeniDugum;
+}
+
+void daireselSonaEkle(struct Dugum** bas, int veri) {
+    struct Dugum* yeni = dugumOlustur(veri);
+    if (*bas == NULL) {
+        *bas = yeni;
+        yeni->sonraki = *bas;
+    } else {
+        struct Dugum* temp = *bas;
+        while (temp->sonraki != *bas) {
+            temp = temp->sonraki;
+        }
+        temp->sonraki = yeni;
+        yeni->sonraki = *bas;
+    }
+}
+void dogrusalSonaEkle(struct Dugum** bas, int veri) {
+    struct Dugum* yeni = dugumOlustur(veri);
+    if (*bas == NULL) {
+        *bas = yeni;
+    } else {
+        struct Dugum* temp = *bas;
+        while (temp->sonraki != NULL) {
+            temp = temp->sonraki;
+        }
+        temp->sonraki = yeni;
+    }
+}
+void listeYazdir(struct Dugum* bas) {
+    if (bas == NULL) return;
+
+    struct Dugum* temp = bas;
+    do {
+        printf("%d -> ", temp->veri);
+        temp = temp->sonraki;
+    } while (temp != NULL && temp != bas);
+
+    if (temp == NULL) {
+        printf("NULL\n");
+    } else {
+        printf("(basa doner)\n");
+    }
+}
+void listeleriBirlestir(struct Dugum** daireselBas, struct Dugum** dogrusalBas) {
+    if (*daireselBas == NULL || *dogrusalBas == NULL) return;
+
+    struct Dugum* daireselSon = *daireselBas;
+    while (daireselSon->sonraki != *daireselBas) {
+        daireselSon = daireselSon->sonraki;
+    }
+
+    struct Dugum* dogrusalSon = *dogrusalBas;
+    while (dogrusalSon->sonraki != NULL) {
+        dogrusalSon = dogrusalSon->sonraki;
+    }
+
+    daireselSon->sonraki = *dogrusalBas;  // Daireselin sonunu doğrusalın başına bağla
+    dogrusalSon->sonraki = *daireselBas;  // Doğrusalın sonunu daireselin başına bağla
+
+    *dogrusalBas = NULL; 
+}
+
+void bellegiSerbestBirak(struct Dugum** bas) {
+    if (*bas == NULL) return;
+
+    struct Dugum* temp = *bas;
+    struct Dugum* sonrakiDugum;
+
+    do {
+        sonrakiDugum = temp->sonraki;
+        free(temp);
+        temp = sonrakiDugum;
+    } while (temp != *bas && temp != NULL);
+
+    *bas = NULL;
+}
+
+int main() {
+    struct Dugum* daireselListe = NULL;
+    struct Dugum* dogrusalListe = NULL;
+
+    int daireselElemanlar[] = {10, 20, 30, 40, 50};
+    for (int i = 0; i < 5; i++) {
+        daireselSonaEkle(&daireselListe, daireselElemanlar[i]);
+    }
+
+    int dogrusalElemanlar[] = {60, 70, 80, 90};
+    for (int i = 0; i < 4; i++) {
+        dogrusalSonaEkle(&dogrusalListe, dogrusalElemanlar[i]);
+    }
+
+    printf("Dairesel liste:\n");
+    listeYazdir(daireselListe);
+    
+    printf("\nDogrusal liste:\n");
+    listeYazdir(dogrusalListe);
+
+    listeleriBirlestir(&daireselListe, &dogrusalListe);
+
+    printf("\nBirlestirilmis dairesel liste:\n");
+    listeYazdir(daireselListe);
+
+    bellegiSerbestBirak(&daireselListe);
+
+    return 0;
+}
