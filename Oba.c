@@ -23,11 +23,11 @@ struct Dugum* sonaEkleDairesel(struct Dugum* bas, int veri) {
         bas = yeniDugum;
         yeniDugum->sonraki = bas;
     } else {
-        struct Dugum* gecici = bas;
-        while (gecici->sonraki != bas) {
-            gecici = gecici->sonraki;
+        struct Dugum* temp = bas;
+        while (temp->sonraki != bas) {
+            temp = temp->sonraki;
         }
-        gecici->sonraki = yeniDugum;
+        temp->sonraki = yeniDugum;
         yeniDugum->sonraki = bas;
     }
     return bas;
@@ -38,11 +38,11 @@ struct Dugum* sonaEkleDogrusal(struct Dugum* bas, int veri) {
     if (bas == NULL) {
         bas = yeniDugum;
     } else {
-        struct Dugum* gecici = bas;
-        while (gecici->sonraki != NULL) {
-            gecici = gecici->sonraki;
+        struct Dugum* temp = bas;
+        while (temp->sonraki != NULL) {
+            temp = temp->sonraki;
         }
-        gecici->sonraki = yeniDugum;
+        temp->sonraki = yeniDugum;
     }
     return bas;
 }
@@ -52,28 +52,28 @@ void listeYazdir(struct Dugum* bas) {
         printf("Liste bos.\n");
         return;
     }
-    struct Dugum* gecici = bas;
+    struct Dugum* temp = bas;
     int dairesel = 0;
     
-    while (gecici != NULL) {
-        if (gecici->sonraki == bas) {
+    while (temp != NULL) {
+        if (temp->sonraki == bas) {
             dairesel = 1;
             break;
         }
-        gecici = gecici->sonraki;
+        temp = temp->sonraki;
     }
     
-    gecici = bas;
+    temp = bas;
     if (dairesel) {
         do {
-            printf("%d -> ", gecici->veri);
-            gecici = gecici->sonraki;
-        } while (gecici != bas);
+            printf("%d -> ", temp->veri);
+            temp = temp->sonraki;
+        } while (temp != bas);
         printf("(basa dondu)\n");
     } else {
-        while (gecici != NULL) {
-            printf("%d -> ", gecici->veri);
-            gecici = gecici->sonraki;
+        while (temp != NULL) {
+            printf("%d -> ", temp->veri);
+            temp = temp->sonraki;
         }
         printf("NULL\n");
     }
@@ -101,11 +101,11 @@ struct Dugum* listeleriBirlestir(struct Dugum* daireselBas, struct Dugum* dogrus
 struct Dugum* bellekSerbestBirak(struct Dugum* daireselBas) {
     if (daireselBas == NULL) return NULL;
     
-    struct Dugum* gecici = daireselBas;
-    while (gecici->sonraki != daireselBas) {
-        gecici = gecici->sonraki;
+    struct Dugum* temp = daireselBas;
+    while (temp->sonraki != daireselBas) {
+        temp = temp->sonraki;
     }
-    gecici->sonraki = NULL;
+    temp->sonraki = NULL;
     
     struct Dugum* simdiki = daireselBas;
     while (simdiki != NULL) {
